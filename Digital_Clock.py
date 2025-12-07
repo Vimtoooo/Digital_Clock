@@ -1,3 +1,4 @@
 import time
-from abc import ABC, abstractmethod
 
+# Implement the Receiver class for executing particular commands
+class DigitalClock:

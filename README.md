@@ -15,8 +15,11 @@
 ### Methods:
 
 #### Design Patterns:
-- **Singleton pattern**: Creates only one instance from the `Clock` class;
-- **Command pattern**: Provides a series of distinct commands, with **command classes**, **receiver class** and an **evoker class**.
+* **Singleton pattern**: Creates only one instance from the `Clock` class;
+* **Command pattern**: Provides a series of distinct commands, with **command classes**, **receiver class** and an **evoker class**:
+    - `Commands` -> Command classes to call on the receive class;
+    - `Evoker` -> Call the particular commands to the commands classes;
+    - `Receiver` -> Execute the called commands (`Clock` class).
 
 #### Core Clock Methods:
 - `__new__(cls)`: Used for the singleton pattern, verifying if an instance has or not been instantiated from this class.
