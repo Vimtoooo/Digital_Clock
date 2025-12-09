@@ -34,7 +34,7 @@
 - `set_format(self, format)`: Toggles the display between 12-hour (with AM/PM) and 24-hour format.
 
 #### Alarm Feature:
-- `set_alarm(self, hour, minute)`: Sets an alarm time.
+- `set_alarm(self, hour, minute, seconds)`: Sets an alarm time.
 - `check_alarm(self)`: Checks if the current time matches the alarm time.
 - `toggle_alarm(self, on_off)`: Enables or disables the alarm.
 

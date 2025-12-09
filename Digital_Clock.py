@@ -25,6 +25,38 @@ class DigitalClock:
         self._initialized: bool = True
         print(f"Finished initialization.")
         
+    def tick(self) -> bool:
+        
+        if self._seconds + 1 == 60:
+            self._seconds = 0
+
+            if self._minutes + 1 == 60:
+                self._minutes = 0
+
+                if self._format_type == "24h" and self._hours + 1 == 24:
+                    self._hours = 0
+                
+                elif self._format_type == "12h" and self._hours + 1 == 13:
+                    self._hours = 1
+
+                    if self._period == "AM":
+                        self._period = "PM"
+                    
+                    else:
+                        self._period = "AM"
+
+                else: 
+                    self._hours += 1
+
+            else: 
+                self._minutes += 1
+
+        else: 
+            self._seconds += 1
+        
+        print(f"Successfully updated the time tick!")
+        return True
+    
     # BUG: Define the clock's core methods...
     def set_time(self, hours: int, minutes: int, seconds: int, time_period: str = "AM") -> bool: # Set the time manually
         try:
@@ -109,37 +141,21 @@ class DigitalClock:
         print(f"Finished setting up the time!")
         return True
     
-    def tick(self) -> bool:
+    def get_time(self, as_a_tuple: bool = False):
+        if as_a_tuple:
+            
+            if self._format_type == "12h":
+                return (f"{self._hours:02}", f"{self._minutes:02}", f"{self._seconds:02}", f"{self._period}")
+            return (f"{self._hours:02}", f"{self._minutes:02}", f"{self._seconds:02}")
         
-        if self._seconds + 1 == 60:
-            self._seconds = 0
+        if self._format_type == "12h":
+            return f"{self._hours:02}:{self._minutes:02}:{self._seconds:02} {self._period}"
+        return f"{self._hours:02}:{self._minutes:02}:{self._seconds:02}"
 
-            if self._minutes + 1 == 60:
-                self._minutes = 0
-
-                if self._format_type == "24h" and self._hours + 1 == 24:
-                    self._hours = 0
-                
-                elif self._format_type == "12h" and self._hours + 1 == 13:
-                    self._hours = 1
-
-                    if self._period == "AM":
-                        self._period = "PM"
-                    
-                    else:
-                        self._period = "AM"
-
-                else: 
-                    self._hours += 1
-
-            else: 
-                self._minutes += 1
-
-        else: 
-            self._seconds += 1
-        
-        print(f"Successfully updated the time tick!")
-        return True
+    def __str__(self) -> str:
+        if self._format_type == "24h":
+            return f"Current Time: {self._hours:02}:{self._minutes:02}:{self._seconds:02}"
+        return f"Current Time: {self._hours:02}:{self._minutes:02}:{self._seconds:02} {self._period}"
     
     # HACK: Display and formatting...
     @property
@@ -188,22 +204,8 @@ class DigitalClock:
         print(f"Successfully changed the time format to {self._format_type}.")
         return True
 
-    def get_time(self, as_a_tuple: bool = False):
-        if as_a_tuple:
-            
-            if self._format_type == "12h":
-                return (f"{self._hours:02}", f"{self._minutes:02}", f"{self._seconds:02}", f"{self._period}")
-            return (f"{self._hours:02}", f"{self._minutes:02}", f"{self._seconds:02}")
-        
-        if self._format_type == "12h":
-            return f"{self._hours:02}:{self._minutes:02}:{self._seconds:02} {self._period}"
-        return f"{self._hours:02}:{self._minutes:02}:{self._seconds:02}"
-
-
-    def __str__(self) -> str:
-        if self._format_type == "24h":
-            return f"Current Time: {self._hours:02}:{self._minutes:02}:{self._seconds:02}"
-        return f"Current Time: {self._hours:02}:{self._minutes:02}:{self._seconds:02} {self._period}"
+    # INFO: Alarm Features...
+    
 
 # Quick tests:
 myClock = DigitalClock()
