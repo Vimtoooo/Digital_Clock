@@ -192,7 +192,7 @@ class DigitalClock:
         if as_a_tuple:
             
             if self._format_type == "12h":
-                return (self._hours:, f"{self._minutes:02}", f"{self._seconds:02}", f"{self._period}")
+                return (f"{self._hours:02}", f"{self._minutes:02}", f"{self._seconds:02}", f"{self._period}")
             return (f"{self._hours:02}", f"{self._minutes:02}", f"{self._seconds:02}")
         
         if self._format_type == "12h":
