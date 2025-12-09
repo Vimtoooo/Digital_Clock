@@ -3,14 +3,6 @@ from datetime import datetime as dt
 
 # Implement the Receiver class for executing particular commands
 class DigitalClock:
-    _instance: object = None
-
-    def __new__(cls, *args, **kwargs) -> object:
-        
-        if cls._instance is None:
-            cls._instance = super().__new__(cls)
-            cls._instance._initialized = False
-        return cls._instance
     
     def __init__(self, hours: int = 0, minutes: int = 0, seconds: int = 0, period: str = "AM", format_type: str = "24h"):
         
@@ -58,7 +50,7 @@ class DigitalClock:
                 else:
                     self._period = "PM"
 
-                print(f"Finished setting up the time to {self._hours}:{self._minutes}:{self._seconds} {self._period}.")
+                print(f"Finished setting up the time to {self._hours:02}:{self._minutes:02}:{self._seconds:02} {self._period}.")
 
             else:
                 if not 0 <= hours <= 23:
@@ -74,7 +66,7 @@ class DigitalClock:
                 
                 self._seconds = seconds
 
-                print(f"Finished setting up the time to {self._hours}:{self._minutes}:{self._seconds}.")
+                print(f"Finished setting up the time to {self._hours:02}:{self._minutes:02}:{self._seconds:02}.")
             
             return True
 
@@ -157,20 +149,68 @@ class DigitalClock:
     @format_type.setter
     def format_type(self, format_type: str) -> bool:
         if not isinstance(format_type, str):
+            
             print(f"Invalid data type: {type(format_type)}")
             return False
         
-        self._format_type = "24h" if "24" in format_type else "12h"
-        self._hours = self._hours
+        simplified_format_type: str = "24h" if "24" in format_type else "12h"
+        
+        if simplified_format_type == "12h" and not self._format_type == simplified_format_type:
+            if 0 <= self._hours <= 11:
+                self._period = "AM"
+
+                if self._hours == 0:
+                    self._hours = 12
+            
+            else:
+                self._period = "PM"
+
+                if self._hours > 12:
+                    self._hours -= 12
+        
+        elif simplified_format_type == "24h" and not self._format_type == "24h":
+            if self._format_type == "AM":
+                
+                if self._hours == 12:
+                    self._hours = 0
+            
+            else:
+                
+                if 1 <= self._hours <- 11:
+                    self._hours += 12
+                
+        else:
+            print(f"The time is already formatted to {self._format_type}!")
+            return True
+
+        self._format_type = simplified_format_type
 
         print(f"Successfully changed the time format to {self._format_type}.")
         return True
 
+    def get_time(self, as_a_tuple: bool = False):
+        if as_a_tuple:
+            
+            if self._format_type == "12h":
+                return (self._hours:, f"{self._minutes:02}", f"{self._seconds:02}", f"{self._period}")
+            return (f"{self._hours:02}", f"{self._minutes:02}", f"{self._seconds:02}")
+        
+        if self._format_type == "12h":
+            return f"{self._hours:02}:{self._minutes:02}:{self._seconds:02} {self._period}"
+        return f"{self._hours:02}:{self._minutes:02}:{self._seconds:02}"
+
+
     def __str__(self) -> str:
         if self._format_type == "24h":
-            return f"Current Time: {self._hours}:{self._minutes}:{self._seconds}"
-        return f"Current Time: {self._hours}:{self._minutes}:{self._seconds} {self._period}"
+            return f"Current Time: {self._hours:02}:{self._minutes:02}:{self._seconds:02}"
+        return f"Current Time: {self._hours:02}:{self._minutes:02}:{self._seconds:02} {self._period}"
 
 # Quick tests:
 myClock = DigitalClock()
+print(myClock)
+
+myClock.auto_set_time()
+print(myClock)
+
+myClock.format_type = "12h"
 print(myClock)

@@ -5,17 +5,17 @@
 - Import the `time` module;
 - The `Clock` class will have to keep track of the time (hours, minutes and seconds);
 - Include methods like: `tick()`, `reset()` and `display_time()`;
-- Apply the **singleton design** to instantiate only one instance from this class.
+- Apply the **command design** to have a diversity of distinct classes with separate functionalities.
 
 ### Modules:
 
 - `time`: Obtain basic time characteristics and feature;
+- `datetime`: Retrieve the current date time.
 - `ABC` and `@abstractmethod`: Initialize abstract methods for implementations.
 
 ### Methods:
 
 #### Design Patterns:
-* **Singleton pattern**: Creates only one instance from the `Clock` class;
 * **Command pattern**: Provides a series of distinct commands, with **command classes**, **receiver class** and an **evoker class**:
     - `Commands` -> Command classes to call on the receive class;
     - `Evoker` -> Call the particular commands to the commands classes;
@@ -26,7 +26,8 @@
 - `__init__(self, hours, minutes, seconds)`: Initializes the clock. Can be set to a specific time or default to the system's current time.
 - `tick(self)`: Advances the clock by one second, handling rollovers for minutes and hours.
 - `set_time(self, hours, minutes, seconds)`: Manually sets the time.
-- `get_time(self)`: Returns the current time as a tuple or formatted string.
+- `auto_set_time()`: Automatically sets the time, based on the time zone that you live in.
+- `get_time(self, as_a_tuple)`: Returns the current time as a tuple or formatted string.
 - `__str__(self)`: Returns a string representation of the time, making the object printable.
 
 #### Display & Formatting:
