@@ -43,3 +43,6 @@
 - `stop_stopwatch(self)`: Stops/pauses the stopwatch.
 - `reset_stopwatch(self)`: Resets the stopwatch to zero.
 - `lap(self)`: Records a lap time.
+
+##### IMPORTANT FIXES AND FEATURES TO ADD:
+- If the user decides to swap to a distinct time format, the alarm must be altered into the adequate type which has been changed to.
