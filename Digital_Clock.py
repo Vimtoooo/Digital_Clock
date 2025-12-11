@@ -187,10 +187,25 @@ class DigitalClock:
                 if self._hours > 12:
                     self._hours -= 12
             
-            alarm_hours: int = int(self._alarm[ : 2])
+            previous_alarm_hours: int = int(self._alarm[ : 2])
 
-            alarm_period = "AM" if 0 <= alarm_hours <= 11 else "PM"
+            if 0 <= previous_alarm_hours <= 11:
+                alarm_period = "AM"
+
+                if previous_alarm_hours == 0:
+                    alarm_hours = 12
+                
+                else:
+                    alarm_hours = previous_alarm_hours
             
+            else:
+                alarm_period = "PM"
+
+                if previous_alarm_hours > 12:
+                    alarm_hours = previous_alarm_hours - 12
+
+                else:
+                    alarm_hours = 12
         
         elif simplified_format_type == "24h" and self._format_type != "24h":
             
@@ -204,7 +219,14 @@ class DigitalClock:
                 if 1 <= self._hours <- 11:
                     self._hours += 12
             
-            alarm_hours: int = int(self._alarm[ : 2])
+            previous_alarm_hours: int = int(self._alarm[ : 2])
+            previous_period: str = self._alarm[9 : ] # 00:00:00 AM
+
+            if previous_period == "AM":
+                alarm_hours = previous_alarm_hours
+                
+            else:
+                alarm_hours = previous_alarm_hours + 12
                 
         else:
             print(f"The time is already formatted to {self._format_type}!")
@@ -382,8 +404,8 @@ class DigitalClock:
 
 # Quick tests:
 myClock = DigitalClock()
-print(myClock)
-
-myClock.set_alarm(hours=17, minutes=8, seconds=0, period="PM")
 
 myClock.format_type = "12h"
+
+myClock.auto_set_time()
+print(myClock)
