@@ -227,18 +227,41 @@ class DigitalClock:
                         if hours >= 10:
                             
                             if not "AM" in self._alarm:
-                                self._alarm = str(hours) + self._alarm[2 : ] + " AM"
+                                
+                                if "PM" in self._alarm:
+                                    self._alarm = str(hours) + self._alarm[2 : - 3] + " AM"
+
+                                else:
+                                    self._alarm = str(hours) + self._alarm[2 : ] + " AM"
                             
                             else:
                                 self._alarm = str(hours) + self._alarm[2 : ]
                         
                         else:
-                            self._alarm = "0" + str(hours) + self._alarm[2 : ] + " AM"
+                            
+                            if not "AM" in self._alarm:
+                                
+                                if "PM" in self._alarm:
+                                    self._alarm = "0" + str(hours) + self._alarm[2 : - 3] + " AM"
+
+                                else:
+                                    self._alarm = "0" + str(hours) + self._alarm[2 : ] + " AM"
+                            
+                            else:
+                                self._alarm = "0" + str(hours) + self._alarm[2 : ]
                     
                     elif hours == 0:
                         
                         if not "AM" in self._alarm:
-                            self._alarm += " AM"
+                            
+                            if "PM" in self._alarm:
+                                self._alarm = self._alarm[ : - 3] + "AM"
+                            
+                            else:
+                                self._alarm += " AM"
+                        
+                        else:
+                            pass
 
                     else:
                         raise ValueError("Alarm insertion out of bounds.")
@@ -250,7 +273,12 @@ class DigitalClock:
                         if hours >= 10:
                             
                             if not "PM" in self._alarm:
-                                self._alarm = str(hours) + self._alarm[2 : ] + " PM"
+
+                                if "AM" in self._alarm:
+                                    self._alarm = str(hours) + self._alarm[2 : - 3] + " PM"
+
+                                else:
+                                    self._alarm = str(hours) + self._alarm[2 : ] + " PM"
                             
                             else:
                                 self._alarm = str(hours) + self._alarm[2 : ]
@@ -261,7 +289,15 @@ class DigitalClock:
                     elif hours == 0:
                         
                         if not "PM" in self._alarm:
-                            self._alarm += " PM"
+
+                            if "AM" in self._alarm:
+                                self._alarm = self._alarm[ : - 3] + " PM"
+                            
+                            else:
+                                self._alarm += " PM"
+                        
+                        else:
+                            pass
 
                     else:
                         raise ValueError("Alarm insertion out of bounds.")
@@ -269,9 +305,10 @@ class DigitalClock:
                 else:
                     raise ValueError("Invalid period.")
 
-                # Implement the minutes and seconds for filling
-
             else:
+
+                if "AM" in self._alarm or "PM" in self._alarm:
+                    self._alarm = self._alarm[ : - 3]
 
                 if 1 <= hours <= 23:
 
@@ -284,26 +321,36 @@ class DigitalClock:
                 if hours < 0 or hours > 23:
                     raise ValueError("Alarm insertion out of bounds.")
 
-                if 1 <= minutes <= 99:
+            if 1 <= minutes <= 59:
 
-                    if minutes >= 10:
-                        self._alarm = self._alarm[0 : 2 + 1] + str(minutes) + self._alarm[5 : 7 + 1]
+                if minutes >= 10:
+                    self._alarm = self._alarm[0 : 2 + 1] + str(minutes) + self._alarm[5 : ]
+
+                else:
+                    self._alarm = self._alarm[0 : 2 + 1] + "0" + str(minutes) + self._alarm[5 : ]
+
+            if minutes < 0 or minutes > 59:
+                raise ValueError("Alarm insertion out of bounds.")
+
+            if 1 <= seconds <= 59:
+
+                if seconds >= 10:
+                    
+                    if self._format_type == "12h":
+                        self._alarm = self._alarm[ : 5 + 1] + str(seconds) + self._alarm[8 : ]
 
                     else:
-                        self._alarm = self._alarm[0 : 2 + 1] + "0" + str(minutes) + self._alarm[5 : 7 + 1]
-
-                if minutes < 0 or minutes > 99:
-                    raise ValueError("Alarm insertion out of bounds.")
-
-                if 1 <= seconds <= 99:
-
-                    if seconds >= 10:
                         self._alarm = self._alarm[ : 5 + 1] + str(seconds)
 
-                    else:
+                else:
+                    
+                    if self._format_type == "24h":
                         self._alarm = self._alarm[ : 5 + 1] + "0" + str(seconds)
+                    
+                    else:
+                        self._alarm = self._alarm[ : 5 + 1] + "0" + str(seconds) + self._alarm[8 : ]
 
-            if seconds < 0 or seconds > 99:
+            if seconds < 0 or seconds > 59:
                 raise ValueError("Alarm insertion out of bounds.")
             
             print(f"Alarm set to: {self._alarm}")
@@ -321,4 +368,10 @@ class DigitalClock:
 myClock = DigitalClock()
 print(myClock)
 
-myClock.set_alarm(hours=1, minutes=10, seconds=50)
+myClock.format_type = "12h"
+
+myClock.set_alarm(hours=11, minutes=8, seconds=0, period="PM")
+
+myClock.format_type = "24h"
+
+myClock.set_alarm(hours=0, minutes=25, seconds=10)
