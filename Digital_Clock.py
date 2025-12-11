@@ -59,7 +59,7 @@ class DigitalClock:
         return True
     
     # BUG: Define the clock's core methods...
-    def set_time(self, hours: int, minutes: int, seconds: int, time_period: str = "AM") -> bool: # Set the time manually
+    def set_time(self, hours: int, minutes: int, seconds: int, period: str = "AM") -> bool: # Set the time manually
         try:
             if self._format_type == "12h":
                 if not 1 <= hours <= 12:
@@ -74,10 +74,10 @@ class DigitalClock:
                     raise ValueError("Incorrect boundaries for seconds")
                 
                 self._seconds = seconds
-                if not ("AM" in time_period.upper() or "PM" in time_period.upper()):
+                if not ("AM" in period.upper() or "PM" in period.upper()):
                     raise ValueError("Invalid time period format")
 
-                elif "AM" in time_period:
+                elif "AM" in period:
                     self._period = "AM"
                 
                 else:
@@ -171,8 +171,10 @@ class DigitalClock:
             return False
         
         simplified_format_type: str = "24h" if "24" in format_type else "12h"
+        alarm_period: str = "AM"
         
-        if simplified_format_type == "12h" and not self._format_type == simplified_format_type:
+        if simplified_format_type == "12h" and self._format_type != simplified_format_type:
+            
             if 0 <= self._hours <= 11:
                 self._period = "AM"
 
@@ -184,8 +186,14 @@ class DigitalClock:
 
                 if self._hours > 12:
                     self._hours -= 12
+            
+            alarm_hours: int = int(self._alarm[ : 2])
+
+            alarm_period = "AM" if 0 <= alarm_hours <= 11 else "PM"
+            
         
-        elif simplified_format_type == "24h" and not self._format_type == "24h":
+        elif simplified_format_type == "24h" and self._format_type != "24h":
+            
             if self._format_type == "AM":
                 
                 if self._hours == 12:
@@ -195,12 +203,20 @@ class DigitalClock:
                 
                 if 1 <= self._hours <- 11:
                     self._hours += 12
+            
+            alarm_hours: int = int(self._alarm[ : 2])
                 
         else:
             print(f"The time is already formatted to {self._format_type}!")
             return True
 
         self._format_type = simplified_format_type
+
+        alarm_minutes: int = int(self._alarm[3 : 4 + 1])
+        alarm_seconds: int = int(self._alarm[6 : 7 + 1])
+
+        print("Updating the alarm...")
+        self.set_alarm(hours=alarm_hours, minutes=alarm_minutes, seconds=alarm_seconds, period=alarm_period)
 
         print(f"Successfully changed the time format to {self._format_type}.")
         return True
@@ -209,13 +225,13 @@ class DigitalClock:
     def set_alarm(self, hours: int = 0, minutes: int = 0, seconds: int = 0, period: str = "AM") -> bool:
         try:
             if not isinstance(hours, int):
-                raise ValueError("Hours must be of type int.")
+                raise ValueError(f"Hours must be of type int. Not of type {type(hours)}")
 
             if not isinstance(minutes, int):
-                raise ValueError("Minutes must be of type int.")
+                raise ValueError(f"Minutes must be of type int. Not of type {type(minutes)}")
             
             if not isinstance(seconds, int):
-                raise ValueError("Seconds must be of type int.")
+                raise ValueError(f"Seconds must be of type int. Not og type {type(seconds)}")
 
 
             if self._format_type == "12h":
@@ -368,10 +384,6 @@ class DigitalClock:
 myClock = DigitalClock()
 print(myClock)
 
+myClock.set_alarm(hours=17, minutes=8, seconds=0, period="PM")
+
 myClock.format_type = "12h"
-
-myClock.set_alarm(hours=11, minutes=8, seconds=0, period="PM")
-
-myClock.format_type = "24h"
-
-myClock.set_alarm(hours=0, minutes=25, seconds=10)
