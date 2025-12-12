@@ -402,10 +402,28 @@ class DigitalClock:
             print(f"Error: An unknown error occurred")
             return False
 
+    def check_alarm(self, apply_seconds: bool) -> bool:
+        
+        if apply_seconds:
+            if self._hours == int(self._alarm[ : 2] and self._minutes == int(self._alarm[3 : 5]) and self._seconds == int(self._alarm[6 : 8])):
+                print("The current time matches the alarm!")
+                return True
+            
+            print("The current time does not match the alarm!")
+            return False
+    
+        else:
+            if self._hours == int(self._alarm[ : 2] and self._minutes == int(self._alarm[3 : 5])):
+                print("The current time matches the alarm!")
+                return True
+            
+            print("The current time does not match the alarm!")
+            return False
+                
+
 # Quick tests:
 myClock = DigitalClock()
 
-myClock.format_type = "12h"
-
 myClock.auto_set_time()
-print(myClock)
+myClock.set_alarm(21, 42, 0)
+myClock.check_alarm(False)
