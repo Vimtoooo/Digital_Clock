@@ -249,7 +249,7 @@ class DigitalClock:
         return True
 
     # INFO: Alarm Features...
-    def set_alarm(self, hours: int = 0, minutes: int = 0, seconds: int = 0, period: str = "AM") -> bool:
+    def set_alarm(self, hours: int = 0, minutes: int = 0, seconds: int = 0, period: str = "AM", on_off: bool = False) -> bool:
         try:
             if not isinstance(hours, int):
                 raise ValueError(f"Hours must be of type int. Not of type {type(hours)}")
@@ -258,7 +258,7 @@ class DigitalClock:
                 raise ValueError(f"Minutes must be of type int. Not of type {type(minutes)}")
             
             if not isinstance(seconds, int):
-                raise ValueError(f"Seconds must be of type int. Not og type {type(seconds)}")
+                raise ValueError(f"Seconds must be of type int. Not of type {type(seconds)}")
 
 
             if self._format_type == "12h":
@@ -396,7 +396,8 @@ class DigitalClock:
             if seconds < 0 or seconds > 59:
                 raise ValueError("Alarm insertion out of bounds.")
             
-            self._alarm_enabled = True
+            if on_off:
+                self.toggle_alarm(on_off=on_off)
 
             print(f"Alarm set to: {self._alarm}")
             return True
@@ -450,12 +451,40 @@ class DigitalClock:
 
                 print("The current time does not match the alarm!")
                 return False
+    
+    def toggle_alarm(self, on_off: bool) -> bool:
+        
+        try:
+            if not isinstance(on_off, bool):
+                raise ValueError("on_of must be of type boolean.")
+            
+
+            if self._alarm_enabled != on_off and self._alarm_enabled == False:
+                self._alarm_enabled = True
+                print("The alarm is now active!")
+            
+            elif self._alarm_enabled != on_off and self._alarm_enabled == True:
+                self._alarm_enabled = False
+                print("The alarm is now unactive!")
+            
+            else:
+                print("Alarm is already active!" if on_off else "Alarm is already unactive!")
+            
+            return True
+
+        except ValueError as e:
+            print(f"Invalid input: {e}")
+            return False
+
+        except Exception:
+            print("Error: An unknown error occurred")
+            return False
 
 # Quick tests:
 if __name__ == "__main__":
     myClock = DigitalClock()
     myClock.auto_set_time()
     # myClock.format_type = "12h"
-    print(myClock)
-    myClock.set_alarm(10, 45, 0)
-    print(myClock.alarm)
+    # print(myClock)
+    myClock.set_alarm(7, 0, 0)
+    myClock.toggle_alarm(True)

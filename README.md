@@ -35,7 +35,7 @@
 - `alarm(self)`: Exhibits the current alarm and its status.
 
 #### Alarm Feature:
-- `set_alarm(self, hour, minute, seconds)`: Sets an alarm time.
+- `set_alarm(self, hour, minute, seconds, period, on_off)`: Sets an alarm time.
 - `check_alarm(self)`: Checks if the current time matches the alarm time.
 - `toggle_alarm(self, on_off)`: Enables or disables the alarm.
 
