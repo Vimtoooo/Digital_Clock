@@ -32,6 +32,7 @@
 
 #### Display & Formatting:
 - `set_format(self, format)`: Toggles the display between 12-hour (with AM/PM) and 24-hour format.
+- `alarm(self)`: Exhibits the current alarm and its status.
 
 #### Alarm Feature:
 - `set_alarm(self, hour, minute, seconds)`: Sets an alarm time.

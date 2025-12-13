@@ -23,6 +23,7 @@ class DigitalClock:
             self._period: str = "AM" if "AM" in period.upper() else "PM" if "PM" in period.upper() else "AM"
         
         self._alarm: str = "00:00:00"
+        self._alarm_enabled: bool = False
         self._initialized: bool = True
         print(f"Finished initialization.")
         
@@ -152,6 +153,10 @@ class DigitalClock:
         if self._format_type == "12h":
             return f"{self._hours:02}:{self._minutes:02}:{self._seconds:02} {self._period}"
         return f"{self._hours:02}:{self._minutes:02}:{self._seconds:02}"
+
+    @property
+    def alarm(self) -> str:
+        return f"Alarm Status:\n{self._alarm}\n{"Alarm is currently active." if self._alarm_enabled else "Alarm is currently not active."}"
 
     def __str__(self) -> str:
         if self._format_type == "24h":
@@ -391,6 +396,8 @@ class DigitalClock:
             if seconds < 0 or seconds > 59:
                 raise ValueError("Alarm insertion out of bounds.")
             
+            self._alarm_enabled = True
+
             print(f"Alarm set to: {self._alarm}")
             return True
         
@@ -451,5 +458,4 @@ if __name__ == "__main__":
     # myClock.format_type = "12h"
     print(myClock)
     myClock.set_alarm(10, 45, 0)
-    myClock.check_alarm(apply_seconds=False)
-    # print(myClock._minutes == int(myClock._alarm[3 : 4 + 1]) and myClock._hours == int(myClock._alarm[: 2]))
+    print(myClock.alarm)
