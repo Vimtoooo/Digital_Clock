@@ -24,6 +24,11 @@ class DigitalClock:
         
         self._alarm: str = "00:00:00"
         self._alarm_enabled: bool = False
+        
+        self._stopwatch_paused: bool = False
+        self._stopwatch_start_time: float = 0
+        self._stopwatch_time: float = 0
+
         self._initialized: bool = True
         print(f"Finished initialization.")
         
@@ -479,6 +484,25 @@ class DigitalClock:
         except Exception:
             print("Error: An unknown error occurred")
             return False
+    
+    # TODO: Segment the stopwatch methods!
+    @property
+    def start_stopwatch(self):
+        print("Stopwatch is running!")
+        self._stopwatch_start_time = t.perf_counter()
+    
+    @property
+    def stop_stopwatch(self, pause_stopwatch: bool = False) -> bool:
+        
+        if not pause_stopwatch and not self._stopwatch_paused:
+            self._stopwatch_time = t.perf_counter()
+            interval: float = self._stopwatch_time - self._stopwatch_start_time
+            
+            print(f"Elapsed time: {interval:.3f}")
+            return True
+        
+        elif pause_stopwatch and 
+            
 
 # Quick tests:
 if __name__ == "__main__":
