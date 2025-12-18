@@ -26,8 +26,9 @@ class DigitalClock:
         self._alarm_enabled: bool = False
         
         self._stopwatch_paused: bool = False
+        self._stopwatch_has_reset: bool = True
         self._stopwatch_start_time: float = 0
-        self._stopwatch_time: float = 0
+        self._stopwatch_elapsed_time: float = 0
 
         self._initialized: bool = True
         print(f"Finished initialization.")
@@ -417,6 +418,10 @@ class DigitalClock:
 
     def check_alarm(self, apply_seconds: bool = False) -> bool:
         
+        if not self._alarm_enabled:
+            print("Please enable the alarm before comparing both the alarm and the current time!")
+            return False
+
         if apply_seconds:
             # BUG: Add an if condition to verify the time format!
             if self._format_type == "12h":
@@ -461,7 +466,7 @@ class DigitalClock:
         
         try:
             if not isinstance(on_off, bool):
-                raise ValueError("on_of must be of type boolean.")
+                raise ValueError("on_off must be of type boolean.")
             
 
             if self._alarm_enabled != on_off and self._alarm_enabled == False:
@@ -486,22 +491,60 @@ class DigitalClock:
             return False
     
     # TODO: Segment the stopwatch methods!
-    @property
-    def start_stopwatch(self):
-        print("Stopwatch is running!")
-        self._stopwatch_start_time = t.perf_counter()
-    
-    @property
-    def stop_stopwatch(self, pause_stopwatch: bool = False) -> bool:
-        
-        if not pause_stopwatch and not self._stopwatch_paused:
-            self._stopwatch_time = t.perf_counter()
-            interval: float = self._stopwatch_time - self._stopwatch_start_time
+    def start_stopwatch(self) -> bool:
+
+        if not self._stopwatch_paused and self._stopwatch_has_reset:
+            self._stopwatch_has_reset = False
+            self._stopwatch_start_time = t.perf_counter()
             
-            print(f"Elapsed time: {interval:.3f}")
+            print("Stopwatch is running!")
             return True
         
-        elif pause_stopwatch and 
+        if self._stopwatch_paused and not self._stopwatch_has_reset:
+            self._stopwatch_start_time = t.perf_counter()
+            self._stopwatch_paused = False
+
+            print("The stopwatch has been unpaused!")
+            return True
+        
+        print("The stopwatch is already active!")
+        return True
+    
+    def stop_stopwatch(self, reset: bool = False) -> str:
+        
+        if not self._stopwatch_paused:
+            self._stopwatch_paused = True
+
+            stopwatch_stop_time: float = t.perf_counter()
+            print("The stopwatch has stopped!")
+
+            elapsed_time: float = self._get_current_stopwatch_time(stopwatch_stop_time)
+                
+            if reset:
+                self.reset_stopwatch()
+                
+            return f"Elapsed time: {elapsed_time} seconds"
+        
+        else:
+            return "The stopwatch has already"
+
+
+    def reset_stopwatch(self) -> bool:
+        
+        if self._stopwatch_has_reset:
+            print("The stopwatch hos already been reset!")
+            return True
+        
+        self._stopwatch_start_time = 0
+        self._stopwatch_elapsed_time = 0
+        
+        print("The stopwatch has successfully been reset!")
+        return True
+
+    # Helper method to retrieve the current elapsed time of the stopwatch
+    def _get_current_stopwatch_time(self, stop_time: float) -> float:
+        self._stopwatch_elapsed_time = stop_time - self._stopwatch_start_time
+        return round(self._stopwatch_elapsed_time, 4)
             
 
 # Quick tests:
