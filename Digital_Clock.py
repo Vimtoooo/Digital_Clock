@@ -25,7 +25,7 @@ class DigitalClock:
         self._alarm: str = "00:00:00"
         self._alarm_enabled: bool = False
         
-        self._stopwatch_paused: bool = False
+        self._stopwatch_paused: bool = True
         self._stopwatch_has_reset: bool = True
         self._stopwatch_start_time: float = 0
         self._stopwatch_elapsed_time: float = 0
@@ -493,7 +493,8 @@ class DigitalClock:
     # TODO: Segment the stopwatch methods!
     def start_stopwatch(self) -> bool:
 
-        if not self._stopwatch_paused and self._stopwatch_has_reset:
+        if self._stopwatch_paused and self._stopwatch_has_reset:
+            self._stopwatch_paused = False
             self._stopwatch_has_reset = False
             self._stopwatch_start_time = t.perf_counter()
             
@@ -526,7 +527,7 @@ class DigitalClock:
             return f"Elapsed time: {elapsed_time} seconds"
         
         else:
-            return "The stopwatch has already"
+            return "The stopwatch has already stopped!"
 
 
     def reset_stopwatch(self) -> bool:
@@ -537,13 +538,20 @@ class DigitalClock:
         
         self._stopwatch_start_time = 0
         self._stopwatch_elapsed_time = 0
+        self._stopwatch_has_reset = True
         
         print("The stopwatch has successfully been reset!")
         return True
 
     # Helper method to retrieve the current elapsed time of the stopwatch
     def _get_current_stopwatch_time(self, stop_time: float) -> float:
-        self._stopwatch_elapsed_time = stop_time - self._stopwatch_start_time
+        
+        if not self._stopwatch_elapsed_time:
+            self._stopwatch_elapsed_time = stop_time - self._stopwatch_start_time
+        
+        else:
+            self._stopwatch_elapsed_time += stop_time - self._stopwatch_start_time
+        
         return round(self._stopwatch_elapsed_time, 4)
             
 
@@ -551,7 +559,13 @@ class DigitalClock:
 if __name__ == "__main__":
     myClock = DigitalClock()
     myClock.auto_set_time()
-    # myClock.format_type = "12h"
-    # print(myClock)
-    myClock.set_alarm(7, 0, 0)
-    myClock.toggle_alarm(True)
+    myClock.start_stopwatch()
+    t.sleep(3)
+    print(myClock.stop_stopwatch())
+    myClock.start_stopwatch()
+    t.sleep(3)
+    print(myClock.stop_stopwatch())
+    myClock.reset_stopwatch()
+    myClock.start_stopwatch()
+    t.sleep(2)
+    print(myClock.stop_stopwatch())

@@ -15,7 +15,7 @@
 
 ### Methods:
 
-#### Design Patterns:
+#### Design Patterns: Still needs implementation!
 * **Command pattern**: Provides a series of distinct commands, with **command classes**, **receiver class** and an **evoker class**:
     - `Commands` -> Command classes to call on the receive class;
     - `Evoker` -> Call the particular commands to the commands classes;
