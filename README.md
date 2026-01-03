@@ -43,7 +43,8 @@
 - `start_stopwatch(self)`: Starts a stopwatch.
 - `stop_stopwatch(self)`: Stops/pauses the stopwatch.
 - `reset_stopwatch(self)`: Resets the stopwatch to zero.
-- `lap(self)`: Records a lap time.
+- `lap(self)`: Records a lap time, indicating the fastest and slowest times recorded.
 
 ##### IMPORTANT FIXES AND FEATURES TO ADD:
-- If the user decides to swap to a distinct time format, the alarm must be altered into the adequate type which has been changed to.
+- If the user decides to swap to a distinct time format, the alarm must be altered into the adequate type which has been changed to. (**DONE**)
+- Record the number of laps that the user has achieved and an option to choose the stopwatch formatting exhibition.
