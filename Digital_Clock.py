@@ -29,6 +29,7 @@ class DigitalClock:
         self._stopwatch_has_reset: bool = True
         self._stopwatch_start_time: float = 0
         self._stopwatch_elapsed_time: float = 0
+        self._laps: list[float] = []
 
         self._initialized: bool = True
         print(f"Finished initialization.")
@@ -66,7 +67,7 @@ class DigitalClock:
         return True
     
     # BUG: Define the clock's core methods...
-    def set_time(self, hours: int, minutes: int, seconds: int, period: str = "AM") -> bool: # Set the time manually
+    def set_time(self, hours: int, minutes: int, seconds: int, period: str) -> bool: # Set the time manually
         try:
             if self._format_type == "12h":
                 if not 1 <= hours <= 12:
@@ -539,6 +540,7 @@ class DigitalClock:
         self._stopwatch_start_time = 0
         self._stopwatch_elapsed_time = 0
         self._stopwatch_has_reset = True
+        self._laps.clear()
         
         print("The stopwatch has successfully been reset!")
         return True
@@ -552,8 +554,18 @@ class DigitalClock:
         else:
             self._stopwatch_elapsed_time += stop_time - self._stopwatch_start_time
         
-        return round(self._stopwatch_elapsed_time, 4)
+        return float(f"{self._stopwatch_elapsed_time:.3f}")
             
+    def lap(self) -> str:
+        
+        if self._stopwatch_has_reset:
+            return "You cannot record a lap at zero!"
+        
+        current_lap: float = t.perf_counter() - self._stopwatch_start_time
+        self._laps.append(current_lap)
+        total_num_of_laps: int = len(self._laps)
+
+        return f"Lap Number {total_num_of_laps}: {current_lap:.3f} seconds"
 
 # Quick tests:
 if __name__ == "__main__":
@@ -561,11 +573,10 @@ if __name__ == "__main__":
     myClock.auto_set_time()
     myClock.start_stopwatch()
     t.sleep(3)
-    print(myClock.stop_stopwatch())
-    myClock.start_stopwatch()
+    print(myClock.lap())
+    t.sleep(2)
+    print(myClock.lap())
     t.sleep(3)
     print(myClock.stop_stopwatch())
+    t.sleep(5)
     myClock.reset_stopwatch()
-    myClock.start_stopwatch()
-    t.sleep(2)
-    print(myClock.stop_stopwatch())
